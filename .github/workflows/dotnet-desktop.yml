@@ -1,0 +1,20 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: docker build ./iscas-lune.Api -t brunobentocaina/iscas-lune-api:latest
+    - name: Push
+      run: |
+        docker login -u brunobentocaina -p ${{ secrets.DOCKER_HUB_KEY }}
+        docker push brunobentocaina/iscas-lune-api:latest

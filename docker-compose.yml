@@ -1,0 +1,59 @@
+version: '3.4'
+
+services:
+  iscas-lune.api:
+    image: iscas-lune-api
+    restart: always
+    build:
+      context: iscas-lune.Api/
+    ports:
+        - 4871:8080
+    networks:
+      - rede-local
+    depends_on:
+      - cached
+      - db
+    environment:
+        REDIS_URL: cached:6379,password=senha1234
+        URL_BASE_FRONT: http://localhost:8081
+        URL_BASE_FRONT_ADMIN: http://localhost:8081
+        PG_STRING: User ID=postgres; Password=senhaPg; Host=db; Port=5432; Database=iscaslune_hml_local; Pooling=true;
+        AMBIENTE: develop
+        JWT_KEY: keyJWT
+        JWT_ISSUER: ISSUER_LOCAL
+        JWT_AUDIENCE: AUDIENCE_LOCAL
+        EMAIL: email@gmail.com
+        EMAIL_PEDIDO: email@gmail.com
+        EMAIL_SERVER: smtp.gmail.com
+        EMAIL_PORT: 587
+        EMAIL_PASSWORD: senhaEmail
+        DELAY_WORKER: 1
+        URL_DISCORD: https://discord.com/api/webhooks/
+        DISCORD_WEB_HOOK_ID: 11887
+        DISCORD_WEB_HOOK_TOKEN: WUJ4efl
+        
+  cached:
+    image: bitnami/redis:latest
+    restart: always
+    ports : 
+       - 63798:6379
+    environment:
+        REDIS_PASSWORD: senha1234
+    networks:
+      - rede-local
+  db:
+    image: postgres
+    restart: always
+    networks:
+      - rede-local
+    ports:
+      - 54325:5432
+    environment:
+       POSTGRES_PASSWORD: senhaPg
+       POSTGRES_DB: iscaslune_hml_local
+
+networks: 
+    rede-local:
+        driver: bridge
+        name: custom
+        

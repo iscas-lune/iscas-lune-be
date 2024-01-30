@@ -1,0 +1,6 @@
+@iscas_lune.Api_HostAddress = http://localhost:5156
+
+GET {{iscas_lune.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
