@@ -1,4 +1,7 @@
-﻿using iscas_lune_api.Infrastructure.Cached;
+﻿using iscas_lune.Api.Infrastructure.Cached;
+using iscas_lune.Api.Infrastructure.Interfaces;
+using iscas_lune.Api.Infrastructure.Repositories;
+using iscas_lune_api.Infrastructure.Cached;
 using iscas_lune_api.Infrastructure.Interfaces;
 using iscas_lune_api.Infrastructure.Repositories;
 using iscaslune.Api.Infrastructure.Cached;
@@ -45,5 +48,8 @@ public static class DependencyInjectInfrastructure
 
         services.AddScoped<ItensPedidoRepository>();
         services.AddScoped<IItensPedidoRepository, ItensPedidoCached>();
+
+        services.AddScoped<HomeRepository>();
+        services.AddScoped<IHomeRepository, HomeCached>();
     }
 }

@@ -1,4 +1,6 @@
-﻿using iscas_lune_api.Domain.Entities;
+﻿using iscas_lune.Api.Domain.Entities;
+using iscas_lune.Api.Domain.EntityConfiguration;
+using iscas_lune_api.Domain.Entities;
 using iscas_lune_api.Domain.EntityConfiguration;
 using iscaslune.Api.Domain.Entities;
 using iscaslune.Api.Domain.EntityConfiguration;
@@ -6,12 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace iscaslune.Api.Domain.Context;
 
-public class IscasLuneContext : DbContext
+public class IscasLuneContext(DbContextOptions options) 
+    : DbContext(options)
 {
-    public IscasLuneContext(DbContextOptions options) : base(options)
-    {
-    }
-
     public DbSet<Categoria> Categorias { get; set; }
     public DbSet<Banner> Banners { get; set; }
     public DbSet<Peso> Pesos { get; set; }
@@ -26,6 +25,7 @@ public class IscasLuneContext : DbContext
     public DbSet<Funcionario> Funcionarios { get; set; }
     public DbSet<TabelaDePreco> TabelaDePreco { get; set; }
     public DbSet<ItensTabelaDePreco> ItensTabelaDePreco { get; set; }
+    //public DbSet<ProdutosMaisVendidos> ProdutosMaisVendidos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -42,5 +42,6 @@ public class IscasLuneContext : DbContext
         modelBuilder.ApplyConfiguration(new FuncionarioConfiguration());
         modelBuilder.ApplyConfiguration(new TabelaDePrecoConfiguration());
         modelBuilder.ApplyConfiguration(new ItensTabelaDePrecoConfiguration());
+        //modelBuilder.ApplyConfiguration(new ProdutosMaisVendidosConfiguration());
     }
 }

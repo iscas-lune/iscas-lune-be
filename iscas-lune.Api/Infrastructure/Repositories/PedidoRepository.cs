@@ -20,32 +20,11 @@ public class PedidoRepository : GenericRepository<Pedido>, IPedidoRepository
 
     public async Task<PaginacaoViewModel<Pedido>> GetPaginacaoPedidoAsync(PaginacaoPedidoDto paginacaoPedidoDto)
     {
-        //var count = await _context
-        //    .Pedidos
-        //    .AsNoTracking()
-        //    .AsQueryable()
-        //    .WhereIsNotNull(paginacaoPedidoDto.GetWhereBySearch())
-        //    .WhereIsNotNull(paginacaoPedidoDto.GetWhereByStatusPedido())
-        //    .CountAsync();
-        //var totalPages = (int)Math.Ceiling((decimal)count / paginacaoPedidoDto.Take);
-
-        //var pedidos = await _context
-        //    .Pedidos
-        //    .AsNoTracking()
-        //    .AsQueryable()
-        //    //.OrderByDescending(x => EF.Property<Pedido>(x, paginacaoPedidoDto.OrderBy))
-        //    .OrderByDescending(x => EF.Property<Pedido>(x, paginacaoPedidoDto.OrderBy))
-        //    .Include(x => x.Usuario)
-        //    .Paginate(paginacaoPedidoDto.Skip, paginacaoPedidoDto.Take)
-        //    .WhereIsNotNull(paginacaoPedidoDto.GetWhereBySearch())
-        //    .WhereIsNotNull(paginacaoPedidoDto.GetWhereByStatusPedido())
-        //    .ToListAsync();
 
         var (total, values) = await _context
                 .Pedidos
                 .AsNoTracking()
                 .AsQueryable()
-                //.OrderByDescending(x => EF.Property<Pedido>(x, paginacaoPedidoDto.OrderBy))
                 .OrderByDescending(x => EF.Property<Pedido>(x, paginacaoPedidoDto.OrderBy))
                 .Include(x => x.Usuario)
                 .WhereIsNotNull(paginacaoPedidoDto.GetWhereBySearch())

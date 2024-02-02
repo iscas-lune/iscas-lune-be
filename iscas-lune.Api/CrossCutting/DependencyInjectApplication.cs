@@ -1,4 +1,6 @@
-﻿using iscas_lune_api.Application.Interfaces;
+﻿using iscas_lune.Api.Application.Interfaces;
+using iscas_lune.Api.Application.Services;
+using iscas_lune_api.Application.Interfaces;
 using iscas_lune_api.Application.Services;
 using iscas_lune_api.ITextSharp.Classes;
 using iscas_lune_api.ITextSharp.Interfaces;
@@ -37,5 +39,6 @@ public static class DependencyInjectApplication
         services.AddScoped<IFuncionarioService, FuncionarioService>();
         services.AddScoped<IItensPedidoService, ItensPedidoService>();
         services.AddScoped<IProcessarPedidoService, ProcessarPedidoService>();
+        services.AddScoped<IHomeService, HomeService>();
     }
 }
