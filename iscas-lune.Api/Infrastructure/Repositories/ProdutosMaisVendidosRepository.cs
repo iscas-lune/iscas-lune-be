@@ -15,7 +15,6 @@ public class ProdutosMaisVendidosRepository(IscasLuneContext context)
     {
         return await _context
             .ProdutosMaisVendidos
-            .AsNoTracking()
             .Where(x => produtosIds.Contains(x.ProdutoId))
             .ToListAsync();
     }

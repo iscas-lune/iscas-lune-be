@@ -14,40 +14,61 @@ public class ProdutosMaisVendidosService(IProdutosMaisVendidosRepository reposit
         IList<AddOrUpdateProdutosMaisVendidosDto> addOrUpdateProdutosMaisVendidosDtos)
     {
         var produtosIds = addOrUpdateProdutosMaisVendidosDtos
-            .Select(x => x.ProdutoId).ToList();
+            .Select(x => x.ProdutoId)
+            .ToList();
 
         var produtosMaisVendidos = await _repository.GetProdutosMaisVendidosAsync(produtosIds);
 
-        var listUpdates = produtosMaisVendidos
-            .Where(x => 
-                addOrUpdateProdutosMaisVendidosDtos.Any(p => p.ProdutoId == x.ProdutoId))
-            .ToList();
+        var add = new List<ProdutosMaisVendidos>();
+        var updates = new List<ProdutosMaisVendidos>();
+        var date = DateTime.Now;
 
-        var listAdd = addOrUpdateProdutosMaisVendidosDtos
-            .Where(x => 
-                !produtosMaisVendidos.Any(p => p.ProdutoId == x.ProdutoId))
-            .ToList();
-
-        foreach (var item in listUpdates)
+        foreach (var addOrUpdateDto in addOrUpdateProdutosMaisVendidosDtos)
         {
-            var quantidadesProdutos = addOrUpdateProdutosMaisVendidosDtos
-                .FirstOrDefault(x => x.ProdutoId == item.ProdutoId)?.QuantidadeProdutos ?? 0;
+            var addOrUpdate = produtosMaisVendidos
+                .FirstOrDefault(x => x.ProdutoId == addOrUpdateDto.ProdutoId);
 
-            item.UpdateQuantidadeProdutos(quantidadesProdutos);
+            if (addOrUpdate == null)
+            {
+                var insert = add.FirstOrDefault(x => x.ProdutoId == addOrUpdateDto.ProdutoId);
+
+                if (insert == null)
+                {
+                    addOrUpdate = new ProdutosMaisVendidos(
+                        Guid.NewGuid(),
+                        date,
+                        date,
+                        0,
+                        addOrUpdateDto.QuantidadeProdutos,
+                        1,
+                        addOrUpdateDto.ProdutoId);
+
+                    add.Add(addOrUpdate);
+                }
+                else
+                {
+                    insert.UpdateQuantidadeProdutos(addOrUpdateDto.QuantidadeProdutos);
+                }
+
+            }
+            else
+            {
+                var update = updates.FirstOrDefault(x => x.ProdutoId == addOrUpdateDto.ProdutoId);
+
+                if(update == null)
+                {
+                    addOrUpdate.UpdateQuantidadeProdutos(addOrUpdateDto.QuantidadeProdutos);
+                    updates.Add(addOrUpdate);
+                }
+                else
+                {
+                    update.UpdateQuantidadeProdutos(addOrUpdateDto.QuantidadeProdutos);
+                }
+
+            }
         }
 
-        var date = DateTime.Now;
-        var add = listAdd.Select(x => new ProdutosMaisVendidos(
-            Guid.NewGuid(),
-            date,
-            date,
-            0,
-            x.QuantidadeProdutos,
-            1,
-            x.ProdutoId))
-            .ToList();
-
         await _repository.AddRangeAsync(add);
-        await _repository.UpdateRangeAsync(listUpdates);
+        await _repository.UpdateRangeAsync(updates);
     }
 }
