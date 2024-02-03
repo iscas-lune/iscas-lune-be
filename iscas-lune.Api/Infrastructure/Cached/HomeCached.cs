@@ -5,27 +5,36 @@ using iscaslune.Api.Application.Interfaces;
 
 namespace iscas_lune.Api.Infrastructure.Cached;
 
-public class HomeCached : IHomeRepository
+public class HomeCached(ICachedService<HomeViewModel> cachedService, HomeRepository repository)
+    : IHomeRepository
 {
-    private readonly ICachedService<HomeViewModel> _cachedService;
-    private readonly HomeRepository _repository;
+    private readonly ICachedService<HomeViewModel> _cachedService = cachedService;
+    private readonly HomeRepository _repository = repository;
     private const string _key = "home";
 
-    public HomeCached(ICachedService<HomeViewModel> cachedService, HomeRepository repository)
+    public async Task<int> GetQuantidadeVendasNoMesAsync()
     {
-        _cachedService = cachedService;
-        _repository = repository;
+        return await _repository.GetQuantidadeVendasNoMesAsync();
     }
 
-    public async Task<HomeViewModel?> GetQuantidadeVendasNoMesAsync()
+    public async Task<IList<HomeProdutosMaisVendidosViewModel>> GetProdutosMaisVendidosAsync()
+    {
+        return await _repository.GetProdutosMaisVendidosAsync();
+    }
+
+    public async Task<HomeViewModel?> GetHomeAsync()
     {
         var home = await _cachedService.GetItemAsync(_key);
 
-        if(home == null)
+        if (home == null)
         {
-            home = await _repository.GetQuantidadeVendasNoMesAsync();
-            if(home != null) 
-                await _cachedService.SetItemAsync(_key, home);
+            home = new()
+            {
+                QuantidadeVendasNoMes = await _repository.GetQuantidadeVendasNoMesAsync(),
+                ProdutosMaisVendidosViewModel = await _repository.GetProdutosMaisVendidosAsync()
+            };
+
+            await _cachedService.SetItemAsync(_key, home);
         }
 
         return home;

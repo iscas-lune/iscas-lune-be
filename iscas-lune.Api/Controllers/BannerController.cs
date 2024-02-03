@@ -1,8 +1,6 @@
 ﻿using iscas_lune_api.Discord.Client;
 using iscaslune.Api.Application.Interfaces;
-using iscaslune.Api.Application.Services;
 using iscaslune.Api.Dtos.Banners;
-using iscaslune.Api.Dtos.Categorias;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,15 +9,10 @@ namespace iscaslune.Api.Controllers;
 [ApiController]
 [Route("api/banner")]
 
-public class BannerController
-    : ControllerBaseIscasLune
+public class BannerController(IBannerService bannerService, IDiscordNotification discordNotification)
+        : ControllerBaseIscasLune(discordNotification)
 {
-    private readonly IBannerService _bannerService;
-
-    public BannerController(IBannerService bannerService, IDiscordNotification discordNotification) : base(discordNotification)
-    {
-        _bannerService = bannerService;
-    }
+    private readonly IBannerService _bannerService = bannerService;
 
     [HttpPost("create")]
     public async Task<IActionResult> CreateBanner(CreateBannerDto createBannerDto)

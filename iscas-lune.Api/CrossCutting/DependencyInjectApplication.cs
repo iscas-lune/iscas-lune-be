@@ -40,5 +40,7 @@ public static class DependencyInjectApplication
         services.AddScoped<IItensPedidoService, ItensPedidoService>();
         services.AddScoped<IProcessarPedidoService, ProcessarPedidoService>();
         services.AddScoped<IHomeService, HomeService>();
+        services.AddScoped<IProdutosMaisVendidosService, ProdutosMaisVendidosService>();
+        services.AddScoped<IHomeEcommerceService, HomeEcommerceService>();
     }
 }

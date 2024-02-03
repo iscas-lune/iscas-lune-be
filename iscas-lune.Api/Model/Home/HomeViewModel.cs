@@ -3,5 +3,6 @@
 public class HomeViewModel
 {
     public int QuantidadeVendasNoMes { get; set; }
-    public int QuantidadeVendasNoMesAnterior { get; set; }
+    public IList<HomeProdutosMaisVendidosViewModel> ProdutosMaisVendidosViewModel { get; set; } = 
+        new List<HomeProdutosMaisVendidosViewModel>();
 }

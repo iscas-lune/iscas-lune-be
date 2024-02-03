@@ -21,7 +21,10 @@ public class ProdutosMaisVendidosConfiguration : IEntityTypeConfiguration<Produt
             .ValueGeneratedOnAdd();
         builder.Property(x => x.ProdutoId)
             .IsRequired();
-        builder.Property(x => x.Quantidade)
+        builder.Property(x => x.QuantidadeProdutos)
+            .IsRequired()
+            .HasPrecision(12, 2);
+        builder.Property(x => x.QuantidadePedidos)
             .IsRequired()
             .HasPrecision(12, 2);
     }

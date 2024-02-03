@@ -16,7 +16,7 @@ public class HomeService : IHomeService
 
     public async Task<HomeViewModel> GetHomeViewModelAsync()
     {
-        return await _homeRepository.GetQuantidadeVendasNoMesAsync()
+        return await _homeRepository.GetHomeAsync()
             ?? throw new ExceptionApi();
     }
 }

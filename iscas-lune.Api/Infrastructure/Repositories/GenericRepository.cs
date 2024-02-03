@@ -37,6 +37,13 @@ public class GenericRepository<T>(IscasLuneContext context)
         return await _context.SaveChangesAsync() > 0;
     }
 
+    public async Task<bool> UpdateRangeAsync(List<T> entities)
+    {
+        _context.Set<T>().UpdateRange(entities);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     private async Task<long> GetNextNumberAsync()
     {
         try

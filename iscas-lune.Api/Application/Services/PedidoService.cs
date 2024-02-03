@@ -1,30 +1,25 @@
-﻿using iscas_lune_api.Application.Interfaces;
+﻿using iscas_lune.Api.Application.Interfaces;
+using iscas_lune.Api.Dtos.ProdutosMaisVendidos;
+using iscas_lune_api.Application.Interfaces;
 using iscas_lune_api.Domain.Entities;
 using iscas_lune_api.Dtos.Pedidos;
 using iscas_lune_api.Exceptions;
 using iscas_lune_api.Infrastructure.Interfaces;
-using iscas_lune_api.Model.Carrinho;
 using iscas_lune_api.Model.Paginacao;
 using iscas_lune_api.Model.Pedidos;
-using iscaslune.Api.Application.Interfaces;
 
 namespace iscas_lune_api.Application.Services;
 
-public class PedidoService : IPedidoService
+public class PedidoService(
+    IPedidoRepository pedidoRepository,
+    ITokenService tokenService,
+    IProcessarPedidoService processarPedidoService,
+    IProdutosMaisVendidosService produtosMaisVendidosService) : IPedidoService
 {
-    private readonly IPedidoRepository _pedidoRepository;
-    private readonly ITokenService _tokenService;
-    private readonly IProcessarPedidoService _processarPedidoService;
-
-    public PedidoService(
-        IPedidoRepository pedidoRepository,
-        ITokenService tokenService,
-        IProcessarPedidoService processarPedidoService)
-    {
-        _pedidoRepository = pedidoRepository;
-        _tokenService = tokenService;
-        _processarPedidoService = processarPedidoService;
-    }
+    private readonly IPedidoRepository _pedidoRepository = pedidoRepository;
+    private readonly ITokenService _tokenService = tokenService;
+    private readonly IProcessarPedidoService _processarPedidoService = processarPedidoService;
+    private readonly IProdutosMaisVendidosService _produtosMaisVendidosService = produtosMaisVendidosService;
 
     public async Task<(string? error, bool result)> CreatePedidoAsync(PedidoCreateDto pedidoCreateDto)
     {
@@ -65,12 +60,41 @@ public class PedidoService : IPedidoService
 
     public async Task<bool> UpdateStatusPedidoAsync(UpdateStatusPedidoDto updateStatusPedidoDto)
     {
-        var pedido = await _pedidoRepository.GetPedidoByUpdateStatusAsync(updateStatusPedidoDto.PedidoId);
+        var pedido = await _pedidoRepository.GetPedidoByUpdateStatusAsync(updateStatusPedidoDto.PedidoId)
+            ?? throw new ExceptionApi("O pedido não foi localizado!"); ;
 
-        if (pedido == null) return false;
+        ValidadeUpdateStatus(pedido, updateStatusPedidoDto.StatusPedido);
 
         pedido.UpdateStatus(updateStatusPedidoDto.StatusPedido);
 
-        return await _pedidoRepository.UpdateAsync(pedido);
+        await _pedidoRepository.UpdateAsync(pedido);
+
+        if(pedido.StatusPedido == StatusPedido.Entregue)
+        {
+            var produtosMaisVendidosDto = pedido
+                .ItensPedido
+                .Select(x =>
+                    new AddOrUpdateProdutosMaisVendidosDto()
+                    {
+                        ProdutoId = x.ProdutoId,
+                        QuantidadeProdutos = x.Quantidade
+                    })
+                .ToList();
+
+            await _produtosMaisVendidosService
+                .AddOrUpdateProdutosMaisVendidosAsync(produtosMaisVendidosDto);
+        }
+
+
+        return true;
+    }
+
+    private static void ValidadeUpdateStatus(Pedido pedido, StatusPedido statusPedido)
+    {
+        if (pedido.StatusPedido == StatusPedido.Entregue)
+            throw new ExceptionApi("O pedido já foi entregue, e não é possível modificar o status, caso necessário, exclua o pedido!");
+
+        if (pedido.StatusPedido == statusPedido)
+            throw new ExceptionApi("Selecione outro status, esse status é o mesmo do pedido!");
     }
 }

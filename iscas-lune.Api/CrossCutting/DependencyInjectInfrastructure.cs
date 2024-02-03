@@ -51,5 +51,7 @@ public static class DependencyInjectInfrastructure
 
         services.AddScoped<HomeRepository>();
         services.AddScoped<IHomeRepository, HomeCached>();
+
+        services.AddScoped<IProdutosMaisVendidosRepository, ProdutosMaisVendidosRepository>();
     }
 }

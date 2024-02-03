@@ -25,7 +25,7 @@ public class IscasLuneContext(DbContextOptions options)
     public DbSet<Funcionario> Funcionarios { get; set; }
     public DbSet<TabelaDePreco> TabelaDePreco { get; set; }
     public DbSet<ItensTabelaDePreco> ItensTabelaDePreco { get; set; }
-    //public DbSet<ProdutosMaisVendidos> ProdutosMaisVendidos { get; set; }
+    public DbSet<ProdutosMaisVendidos> ProdutosMaisVendidos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -42,6 +42,6 @@ public class IscasLuneContext(DbContextOptions options)
         modelBuilder.ApplyConfiguration(new FuncionarioConfiguration());
         modelBuilder.ApplyConfiguration(new TabelaDePrecoConfiguration());
         modelBuilder.ApplyConfiguration(new ItensTabelaDePrecoConfiguration());
-        //modelBuilder.ApplyConfiguration(new ProdutosMaisVendidosConfiguration());
+        modelBuilder.ApplyConfiguration(new ProdutosMaisVendidosConfiguration());
     }
 }

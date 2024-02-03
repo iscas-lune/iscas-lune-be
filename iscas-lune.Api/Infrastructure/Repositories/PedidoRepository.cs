@@ -20,7 +20,6 @@ public class PedidoRepository : GenericRepository<Pedido>, IPedidoRepository
 
     public async Task<PaginacaoViewModel<Pedido>> GetPaginacaoPedidoAsync(PaginacaoPedidoDto paginacaoPedidoDto)
     {
-
         var (total, values) = await _context
                 .Pedidos
                 .AsNoTracking()
@@ -54,7 +53,11 @@ public class PedidoRepository : GenericRepository<Pedido>, IPedidoRepository
 
     public async Task<Pedido?> GetPedidoByUpdateStatusAsync(Guid id)
     {
-        return await _context.Pedidos.FirstOrDefaultAsync(x => x.Id == id);
+        return await _context
+            .Pedidos
+            .AsNoTracking()
+            .Include(x => x.ItensPedido)
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<List<PedidoViewModelSemItens>> GetPedidosByUsuarioIdAsync(Guid usuarioId, int statusPedido)
