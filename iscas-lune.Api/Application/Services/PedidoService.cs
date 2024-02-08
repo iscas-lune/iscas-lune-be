@@ -97,4 +97,12 @@ public class PedidoService(
         if (pedido.StatusPedido == statusPedido)
             throw new ExceptionApi("Selecione outro status, esse status é o mesmo do pedido!");
     }
+
+    public async Task<bool> DeletePedidoAsync(Guid id)
+    {
+        var pedido = await _pedidoRepository.GetPedidoByDeleteAsync(id)
+            ?? throw new ExceptionApi("O pedido não foi localizado");
+
+        return await _pedidoRepository.DeleteAsync(pedido);
+    }
 }

@@ -10,4 +10,5 @@ public interface IPedidoService
     Task<List<PedidoViewModelSemItens>> GetPedidosUsuarioAsync(int statusPedido);
     Task<bool> UpdateStatusPedidoAsync(UpdateStatusPedidoDto updateStatusPedidoDto);
     Task<PaginacaoViewModel<PedidoViewModel>> GetPaginacaoAsync(PaginacaoPedidoDto paginacaoPedidoDto);
+    Task<bool> DeletePedidoAsync(Guid id);
 }

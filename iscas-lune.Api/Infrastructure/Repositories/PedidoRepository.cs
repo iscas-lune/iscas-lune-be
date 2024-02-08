@@ -37,6 +37,14 @@ public class PedidoRepository : GenericRepository<Pedido>, IPedidoRepository
         };
     }
 
+    public async Task<Pedido?> GetPedidoByDeleteAsync(Guid id)
+    {
+        return await _context
+            .Pedidos
+            .Include(x => x.ItensPedido)
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
     public async Task<Pedido?> GetPedidoByIdAsync(Guid id)
     {
         return await _context.Pedidos

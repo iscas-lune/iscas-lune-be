@@ -106,4 +106,28 @@ public class PedidoController : ControllerBaseIscasLune
             return await HandleError(ex.Message);
         }
     }
+
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    [IsFuncionario]
+    [EnableCors("iscasluneoriginadmin")]
+    [HttpDelete("delete")]
+    public async Task<IActionResult> Delete([FromQuery] Guid id)
+    {
+        try
+        {
+            var result = await _pedidoService.DeletePedidoAsync(id);
+
+            if (!result) return BadRequest(new { message = "Ocorreu um erro interno, tente novamente mais tarde!" });
+
+            return Ok();
+        }
+        catch (ExceptionApi ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return await HandleError(ex.Message);
+        }
+    }
 }

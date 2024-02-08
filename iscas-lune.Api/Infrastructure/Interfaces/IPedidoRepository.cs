@@ -10,6 +10,7 @@ public interface IPedidoRepository : IGenericRepository<Pedido>
 {
     Task<List<PedidoViewModelSemItens>> GetPedidosByUsuarioIdAsync(Guid usuarioId, int statusPedido);
     Task<Pedido?> GetPedidoByIdAsync(Guid id);
+    Task<Pedido?> GetPedidoByDeleteAsync(Guid id);
     Task<Pedido?> GetPedidoByUpdateStatusAsync(Guid id);
     Task<PaginacaoViewModel<Pedido>> GetPaginacaoPedidoAsync(PaginacaoPedidoDto paginacaoPedidoDto);
 }
