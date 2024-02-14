@@ -1,4 +1,4 @@
-﻿using iscas_lune_api.Application.Interfaces;
+using iscas_lune_api.Application.Interfaces;
 using iscas_lune_api.Infrastructure.Interfaces;
 using iscas_lune_api.ITextSharp.Interfaces;
 using iscaslune.Api;
@@ -38,7 +38,7 @@ public class PdfPedido : IPdfPedido
 
             using var memoryStream = new MemoryStream();
 
-            var cultureInfo = new CultureInfo("pt-BR");
+            //var cultureInfo = new CultureInfo("pt-BR");
             var formato = new NumberFormatInfo
             {
                 NumberDecimalSeparator = ",",
@@ -53,7 +53,7 @@ public class PdfPedido : IPdfPedido
             var document = new Document(PageSize.A4);
             document.SetMargins(15f, 15f, 15f, 20f);
 
-            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+            //PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
             var tableEmpresa = new PdfPTable(1)
             {
@@ -144,8 +144,8 @@ public class PdfPedido : IPdfPedido
 
             tableDadosProdutos.SetWidths(columnWidths);
 
-            var eventHelper = new CustomPageEventHandler();
-            writer.PageEvent = eventHelper;
+            //var eventHelper = new CustomPageEventHandler();
+            //writer.PageEvent = eventHelper;
 
             var tableTotalizacao = new PdfPTable(_celulas.Count);
             tableTotalizacao.DefaultCell.FixedHeight = 15;
