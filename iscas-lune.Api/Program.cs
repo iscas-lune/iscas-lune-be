@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 DotEnv.Load();
 
-//QuestPDF.Settings.License = LicenseType.Community;
+QuestPDF.Settings.License = LicenseType.Community;
 
 builder.Services.AddControllers().AddJsonOptions(opt =>
 {
