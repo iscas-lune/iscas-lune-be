@@ -4,11 +4,14 @@ using iscas_lune_api.Workers;
 using iscaslune.Api;
 using iscaslune.Api.CrossCutting;
 using Microsoft.OpenApi.Models;
+using QuestPDF.Infrastructure;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 DotEnv.Load();
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 builder.Services.AddControllers().AddJsonOptions(opt =>
 {
